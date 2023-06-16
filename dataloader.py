@@ -13,6 +13,9 @@ class ImageDataset(data.Dataset):
     def __init__(self, ann_file, transform=None):
         self.ann_file = ann_file
         self.transform = transform
+        self.mask = torch.cat((torch.zeros((3,10,224)), torch.ones((3,186,224)), torch.zeros((3,28,224))), 1) 
+        
+        
         self.init()
 
     def init(self):
@@ -36,7 +39,7 @@ class ImageDataset(data.Dataset):
         
         img = self.transform(img)
 
-        return img, img
+        return img*self.mask, img*self.mask
 
     def __len__(self):
         return len(self.im_names)
@@ -49,10 +52,10 @@ def train_loader(args):
     # [?] guassian blur will lead to a significantly drop in train loss while val loss remain the same
 
     augmentation = [
-        transforms.RandomResizedCrop(224, scale=(0.2, 1.)),
+        transforms.Resize(224),
         #transforms.RandomGrayscale(p=0.2),
         #transforms.RandomApply([GaussianBlur([.1, 2.])], p=0.5),
-        transforms.RandomHorizontalFlip(),
+        # transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
     ]
 

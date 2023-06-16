@@ -80,7 +80,7 @@ def main_worker(gpu, args):
         args.rank = args.nr * args.gpus + args.gpu
 
         torch.cuda.set_device(gpu)
-        torch.distributed.init_process_group(backend='nccl', init_method=args.dist_url, world_size=args.world_size, rank=args.rank)  
+        # torch.distributed.init_process_group(backend='nccl', init_method=args.dist_url, world_size=args.world_size, rank=args.rank)  
            
     else:
         # two dummy variable, not real
@@ -111,7 +111,16 @@ def main_worker(gpu, args):
 
     global iters
     iters = 0
-
+    def load_dict(resume_path, model):
+        if os.path.isfile(resume_path):
+            checkpoint = torch.load(resume_path)
+            model_dict = model.state_dict()
+            model_dict.update(checkpoint['state_dict'])
+            model.load_state_dict(model_dict)
+            del checkpoint
+    
+        return model
+    model = load_dict("outputs/019.pth", model)
     model.train()
     if args.rank == 0:
         print('=> starting training engine ...')
@@ -120,7 +129,7 @@ def main_worker(gpu, args):
         global current_lr
         current_lr = utils.adjust_learning_rate_cosine(optimizer, epoch, args)
 
-        train_loader.sampler.set_epoch(epoch)
+        # train_loader.sampler.set_epoch(epoch)
         
         # train for one epoch
         do_train(train_loader, model, criterion, optimizer, epoch, args)

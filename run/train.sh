@@ -23,3 +23,6 @@ python3 -u train.py \
     --pth-save-epoch 1 \
     --parallel 1 \
     --dist-url 'tcp://localhost:10001' 2>&1 | tee ${OUTPUT}/output.log 
+
+
+    python train.py --arch resnet50 --train_list list/eval_list.txt --batch-size 6 --workers 1 --start-epoch 0 --epochs 1 --pth-save-fold outputs
