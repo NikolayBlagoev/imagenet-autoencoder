@@ -1,0 +1,12 @@
+arr.csv
+
+list/*
+!list/.gitkeep
+
+outputs/*
+!outputs/.gitkeep
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
