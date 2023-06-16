@@ -81,7 +81,7 @@ val_trans = transforms.Compose([
                     transforms.ToTensor()
                   ])
 
-val_dataset = ImageDataset("list/NAME_list.txt", transform=val_trans)      
+val_dataset = ImageDataset("list/highlights_list.txt", transform=val_trans)
 print("MAKING AUTOENCODE")
 model = builder.BuildAutoEncoder("")   
 print("LOADING STATE DICTIONARY")
